@@ -1,0 +1,2 @@
+# anagmaMAP
+anagram visual checker
