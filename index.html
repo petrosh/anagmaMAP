@@ -65,7 +65,7 @@
           if(end!=-1)
             goline(off+(i*mult),60,off+(end*mult),230);
           else
-            gocircle(off+(i*mult),50);
+            gocircle(off+(i*mult),49);
         }
       }
       for (var i = 0; i < an2.length; i++){
@@ -73,10 +73,10 @@
         if(comp!=' '){
           var end = wrong[4][i];
           if(end==-1)
-            gocircle(off+(i*mult),250);
+            gocircle(off+(i*mult),249);
         }
       }
-      gotext(20,60,document.getElementById("an1").value)
+      gotext(20,60,document.getElementById("an1").value.replace(new RegExp(" ", "g"), '\u00A0'))
       gotext(20,260,document.getElementById("an2").value.replace(new RegExp(" ", "g"), '\u00A0'));
 
       function gotext(x,y,text){
