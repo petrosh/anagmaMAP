@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+  #svg{
+    border:1px solid black;
+    width: 100%;
+    height: 300px;
+  }
+  h1 span{font-style:italic;}
+  </style>
+<script charset="utf-8">
+  // abcd
+  // cba
+  // { a: 3, b: 2, c: 1, d: 0 }
+  // { c: 3, b: 2, a: 1 }
+  function myFunction(){
+    while (document.getElementById('svg').lastChild) {
+      document.getElementById('svg').removeChild(document.getElementById('svg').lastChild);
+    }
+    var an1 = app1 = document.getElementById("an1").value.toLowerCase();//.replace(/\s/g, '');
+    var an2 = app2 = document.getElementById("an2").value.toLowerCase();//.replace(new RegExp(" ", "g"), '');
+    console.log(an1,an2)
+    var same = true;
+    var wrong = { 1: [], 2: [], 3: [], 4: [] };
+    for (var i = 0; i < an1.length; i++){
+      var comp = an1.charAt(i);
+        // search first recursion, store position, mark as space
+        var index = app2.search(comp);
+        wrong[3].push(index);
+        if(index!=-1) app2 = app2.substr(0, index) + ' ' + app2.substr(index+1);
+        // app2.charAt(index) = ' ';
+        var num1 = (an1.split(new RegExp(comp, "g")).length - 1);
+        var num2 = (an2.split(new RegExp(comp, "g")).length - 1);
+        if(num1!=num2){
+          if(comp!=' '){
+            same = false;
+          }
+          wrong[1].push(index);
+        }
+    }
+    for (var i = 0; i < an2.length; i++){
+      var comp = an2.charAt(i);
+      var index = app1.search(comp);
+      wrong[4].push(index);
+      if(index!=-1) app1 = app1.substr(0, index) + ' ' + app1.substr(index+1);
+      if(comp!=' '){
+        var num1 = (an1.split(new RegExp(comp, "g")).length - 1);
+        var num2 = (an2.split(new RegExp(comp, "g")).length - 1);
+        if(num1!=num2){
+          if(comp!=' '){
+            same = false;
+          }
+          wrong[2].push(index);
+        }
+      }
+    }
+    if(true){ // DRAW
+      var xmlns = "http://www.w3.org/2000/svg";
+      var mult = 30.5, off = 35;
+      for (var i = 0; i < an1.length; i++){
+        var comp = an1.charAt(i);
+        if(comp!=' '){
+          var end = wrong[3][i];
+          if(end!=-1)
+            goline(off+(i*mult),60,off+(end*mult),230);
+          else
+            gocircle(off+(i*mult),50);
+        }
+      }
+      for (var i = 0; i < an2.length; i++){
+        var comp = an2.charAt(i);
+        if(comp!=' '){
+          var end = wrong[4][i];
+          if(end==-1)
+            gocircle(off+(i*mult),250);
+        }
+      }
+      gotext(20,60,document.getElementById("an1").value)
+      gotext(20,260,document.getElementById("an2").value.replace(new RegExp(" ", "g"), '\u00A0'));
+
+      function gotext(x,y,text){
+        var txtElem = document.createElementNS(xmlns, "text");
+        txtElem.setAttributeNS(null,"x",x);
+        txtElem.setAttributeNS(null,"y",y);
+        txtElem.setAttributeNS(null,"font-size",51);
+        txtElem.setAttribute("font-family","monospace")
+        var helloTxt = document.createTextNode(text);
+        txtElem.appendChild(helloTxt);
+        document.getElementById('svg').appendChild(txtElem);
+      }
+      function goline(x1,y1,x2,y2){
+        var newLine = document.createElementNS(xmlns, 'line');
+        newLine.setAttribute('x1',x1);
+        newLine.setAttribute('y1',y1);
+        newLine.setAttribute('x2',x2);
+        newLine.setAttribute('y2',y2);
+        newLine.setAttribute("stroke","rgb(255,0,0)")
+        newLine.setAttribute("stroke-width","1");
+        newLine.setAttribute("stroke-miterlimit","10");
+        document.getElementById('svg').appendChild(newLine);
+      }
+      function gocircle(x,y){
+        var newGlobe = document.createElementNS(xmlns, 'circle');
+        newGlobe.setAttribute('cx',x);
+        newGlobe.setAttribute('cy',y);
+        newGlobe.setAttribute("stroke","rgb(255,0,0)")
+        newGlobe.setAttribute("stroke-width","1");
+        newGlobe.setAttribute("fill","rgb(255,0,0)");
+        newGlobe.setAttribute("r","16");
+        document.getElementById('svg').appendChild(newGlobe);
+      }
+    }
+    console.log(same,wrong);
+    return false;
+  }
+</script>
+</head>
+<body>
+  <h1>anagma<span>MAP</span></h1>
+  <h3>anagram visual checker</h3>
+  <form onsubmit="myFunction(); return false;">
+    <input type="text" id="an1" size="40" placeholder="text 1">
+    <br>
+    <input type="text" id="an2" size="40" placeholder="text 2">
+    <br>
+    <input type="submit" value="check">
+  </form>
+  <br>
+  <svg id="svg"></svg>
+</body></html>
